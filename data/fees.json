@@ -1,0 +1,345 @@
+{
+  "UG": [
+    {
+      "code": "ba_be",
+      "name": "B.A. Business Economics",
+      "keywords": ["ba business economics", "business economics"],
+      "shift": "M",
+      "year1": 51000,
+      "year2": 51000,
+      "year3": 51000
+    },
+    {
+      "code": "ba_eng",
+      "name": "B.A. English",
+      "keywords": ["ba english", "b.a english"],
+      "shift": "M",
+      "year1": 58500,
+      "year2": 59000,
+      "year3": 59000
+    },
+    {
+      "code": "bca",
+      "name": "B.C.A",
+      "keywords": ["bca", "b.c.a", "bca computer applications"],
+      "shift": "M",
+      "year1": 92000,
+      "year2": 91000,
+      "year3": 91000
+    },
+    {
+      "code": "bcom_af",
+      "name": "B.Com A&F",
+      "keywords": ["bcom af", "b.com af", "accounting and finance"],
+      "shift": "M",
+      "year1": 84000,
+      "year2": 84000,
+      "year3": 83000
+    },
+    {
+      "code": "bcom_bank",
+      "name": "B.Com Bank Management",
+      "keywords": ["bcom bank management"],
+      "shift": "M",
+      "year1": 79000,
+      "year2": 79000,
+      "year3": 79000
+    },
+    {
+      "code": "bcom_cs",
+      "name": "B.Com Corporate Secretaryship",
+      "keywords": ["bcom corporate secretaryship", "bcom cs"],
+      "shift": "M",
+      "year1": 78000,
+      "year2": 78000,
+      "year3": 78000
+    },
+    {
+      "code": "bcom_gen",
+      "name": "B.Com General",
+      "keywords": ["bcom general"],
+      "shift": "M",
+      "year1": 84000,
+      "year2": 84000,
+      "year3": 83000
+    },
+    {
+      "code": "bsc_cs_data",
+      "name": "B.Sc C.Sc – Data Science",
+      "keywords": ["bsc data science", "data science"],
+      "shift": "M",
+      "year1": 91000,
+      "year2": 91000,
+      "year3": 90000
+    },
+    {
+      "code": "bsc_psy",
+      "name": "B.Sc Psychology",
+      "keywords": ["bsc psychology"],
+      "shift": "M",
+      "year1": 75000,
+      "year2": 70000,
+      "year3": 70000
+    },
+    {
+      "code": "bsc_chem",
+      "name": "B.Sc Chemistry",
+      "keywords": ["bsc chemistry"],
+      "shift": "M",
+      "year1": 63000,
+      "year2": 62000,
+      "year3": 62000
+    },
+    {
+      "code": "bsc_cs",
+      "name": "B.Sc Computer Science",
+      "keywords": ["bsc cs", "bsc computer science"],
+      "shift": "M",
+      "year1": 85000,
+      "year2": 84000,
+      "year3": 81000
+    },
+    {
+      "code": "bsc_math",
+      "name": "B.Sc Mathematics",
+      "keywords": ["bsc maths", "bsc mathematics"],
+      "shift": "M",
+      "year1": 72000,
+      "year2": 72000,
+      "year3": 72000
+    },
+    {
+      "code": "bsc_home_sc",
+      "name": "B.Sc Home Science (NFSM&D)",
+      "keywords": ["bsc home science", "nfsmd"],
+      "shift": "M",
+      "year1": 72000,
+      "year2": 72000,
+      "year3": 65000
+    },
+
+    
+
+    {
+      "code": "bba",
+      "name": "B.B.A",
+      "keywords": ["bba", "b.b.a"],
+      "shift": "E",
+      "year1": 75000,
+      "year2": 75000,
+      "year3": 75000
+    },
+    {
+      "code": "bca_e",
+      "name": "B.C.A (Shift II)",
+      "keywords": ["bca evening", "bca shift 2"],
+      "shift": "E",
+      "year1": 90000,
+      "year2": 90000,
+      "year3": 90000
+    },
+    {
+      "code": "bcom_af_e",
+      "name": "B.Com A&F (Shift II)",
+      "keywords": ["bcom af evening"],
+      "shift": "E",
+      "year1": 84000,
+      "year2": 83000,
+      "year3": 83000
+    },
+    {
+      "code": "bcom_bank_e",
+      "name": "B.Com Bank Management (Shift II)",
+      "keywords": ["bank mgmt evening"],
+      "shift": "E",
+      "year1": 85000,
+      "year2": 85000,
+      "year3": 85000
+    },
+    {
+      "code": "bcom_ca_e",
+      "name": "B.Com Comp. Application (Shift II)",
+      "keywords": ["bcom ca evening"],
+      "shift": "E",
+      "year1": 85000,
+      "year2": 85000,
+      "year3": 85000
+    },
+    {
+      "code": "bcom_cs_e",
+      "name": "B.Com Corporate Secretaryship (Shift II)",
+      "keywords": ["bcom cs evening"],
+      "shift": "E",
+      "year1": 78000,
+      "year2": 78000,
+      "year3": 78000
+    },
+    {
+      "code": "bcom_gen_e",
+      "name": "B.Com General (Shift II)",
+      "keywords": ["bcom general evening"],
+      "shift": "E",
+      "year1": 84000,
+      "year2": 84000,
+      "year3": 84000
+    },
+    {
+      "code": "bcom_mkt_e",
+      "name": "B.Com Mkt Mgt (Shift II)",
+      "keywords": ["marketing management evening"],
+      "shift": "E",
+      "year1": 85000,
+      "year2": 85000,
+      "year3": 85000
+    },
+    {
+      "code": "bcom_hon_e",
+      "name": "B.Com Honours (Shift II)",
+      "keywords": ["bcom honours evening"],
+      "shift": "E",
+      "year1": 89000,
+      "year2": 89000,
+      "year3": 89000
+    },
+    {
+      "code": "bsc_cs_ai_e",
+      "name": "B.Sc CS with AI",
+      "keywords": ["bsc ai", "bsc artificial intelligence"],
+      "shift": "E",
+      "year1": 99000,
+      "year2": 99000,
+      "year3": 99000
+    },
+    {
+      "code": "bsc_psy_e",
+      "name": "B.Sc Psychology (Shift II)",
+      "keywords": ["bsc psychology evening"],
+      "shift": "E",
+      "year1": 67000,
+      "year2": 67000,
+      "year3": 66000
+    },
+    {
+      "code": "bsc_cs_e",
+      "name": "B.Sc Computer Science (Shift II)",
+      "keywords": ["bsc cs evening"],
+      "shift": "E",
+      "year1": 82000,
+      "year2": 82000,
+      "year3": 80000
+    }
+  ],
+
+  "PG": [
+    {
+      "code": "ma_eng",
+      "name": "M.A. English",
+      "keywords": ["ma english"],
+      "shift": "M",
+      "year1": 60000,
+      "year2": 58000,
+      "year3": null
+    },
+    {
+      "code": "ma_pa",
+      "name": "M.A. Public Administration",
+      "keywords": ["ma public admin"],
+      "shift": "M",
+      "year1": 47000,
+      "year2": 45000,
+      "year3": null
+    },
+    {
+      "code": "mcom_bank",
+      "name": "M.Com Bank Management",
+      "keywords": ["mcom bank mgmt"],
+      "shift": "M",
+      "year1": 61000,
+      "year2": 59000,
+      "year3": null
+    },
+    {
+      "code": "mcom_cs",
+      "name": "M.Com Corporate Secretaryship",
+      "keywords": ["mcom cs"],
+      "shift": "M",
+      "year1": 61000,
+      "year2": 59000,
+      "year3": null
+    },
+    {
+      "code": "msc_home_sc",
+      "name": "M.Sc Home Science (FSM&D)",
+      "keywords": ["msc home science"],
+      "shift": "M",
+      "year1": 79000,
+      "year2": 77000,
+      "year3": null
+    },
+    {
+      "code": "msc_chem",
+      "name": "M.Sc Chemistry",
+      "keywords": ["msc chemistry"],
+      "shift": "M",
+      "year1": 79000,
+      "year2": 77000,
+      "year3": null
+    },
+    {
+      "code": "msc_cs",
+      "name": "M.Sc Computer Science",
+      "keywords": ["msc cs"],
+      "shift": "M",
+      "year1": 90000,
+      "year2": 88000,
+      "year3": null
+    },
+    {
+      "code": "msc_math",
+      "name": "M.Sc Mathematics",
+      "keywords": ["msc maths"],
+      "shift": "M",
+      "year1": 61000,
+      "year2": 59000,
+      "year3": null
+    },
+    {
+      "code": "msw",
+      "name": "Master of Social Work (MSW)",
+      "keywords": ["msw"],
+      "shift": "M",
+      "year1": 74000,
+      "year2": 72000,
+      "year3": null
+    },
+
+    
+    {
+      "code": "mcom_gen_ii",
+      "name": "M.Com General – II",
+      "keywords": ["mcom general shift 2"],
+      "shift": "E",
+      "year1": 61000,
+      "year2": 59000,
+      "year3": null
+    },
+    {
+      "code": "msc_applied_psy",
+      "name": "M.Sc Applied Psychology",
+      "keywords": ["msc applied psychology"],
+      "shift": "E",
+      "year1": 79000,
+      "year2": 77000,
+      "year3": null
+    },
+    {
+      "code": "msc_home_sc_ii",
+      "name": "M.Sc Home Science (FSM&D) – II",
+      "keywords": ["msc home science ii"],
+      "shift": "E",
+      "year1": 79000,
+      "year2": 77000,
+      "year3": null
+    }
+  ]
+}

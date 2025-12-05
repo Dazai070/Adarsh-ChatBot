@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Anna Adarsh College Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/static/images/logo.png" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #5a2a82, #f3e8ff);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    body.dark {
+      background: radial-gradient(circle at top, #020617, #020617 40%, #111827);
+      color: #e5e7eb;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      height: 100vh;
+      max-width: 1200px;
+      background: #ffffff;
+      display: flex;
+      border-radius: 0;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      position: relative; /* for scroll button */
+    }
+
+    body.dark .app-wrapper {
+      background: #020617;
+      box-shadow: none;
+    }
+
+    /* Left info panel */
+    .info-panel {
+      width: 40%;
+      background: linear-gradient(160deg, #5a2a82, #8a4bb8);
+      color: #f8f5ff;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-panel::before {
+      content: "";
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .info-panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .logo-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 28px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .info-header-text h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .info-header-text p {
+      margin: 0;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .info-section {
+      margin-top: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .info-section h2 {
+      margin: 14px 0 6px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.9;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      font-size: 11px;
+      margin: 3px 6px 4px 0;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.1s ease-out, transform 0.07s ease-out, border 0.1s;
+    }
+
+    .pill:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .info-footer {
+      position: relative;
+      z-index: 1;
+      font-size: 11px;
+      opacity: 0.9;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 10px;
+      margin-top: 14px;
+    }
+
+    .info-footer span {
+      display: block;
+    }
+
+    .info-footer strong {
+      font-size: 12px;
+    }
+
+    /* Chat panel */
+    .chat-panel {
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      background: #faf7ff;
+      position: relative; /* for scroll button */
+    }
+
+    body.dark .chat-panel {
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .chat-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid #e0d4ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+    }
+
+    body.dark .chat-header {
+      background: #020617;
+      border-bottom-color: #1f2937;
+    }
+
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.18);
+    }
+
+    .chat-header-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #312e81;
+    }
+
+    body.dark .chat-header-title {
+      color: #e5e7eb;
+    }
+
+    .chat-header-subtitle {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    body.dark .chat-header-subtitle {
+      color: #9ca3af;
+    }
+
+    .chat-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-header-badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4f46e5;
+      border: 1px solid #e0e7ff;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    body.dark .chat-header-badge {
+      background: #111827;
+      color: #a5b4fc;
+      border-color: #1f2937;
+    }
+
+    .theme-toggle-btn {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: 12px;
+      padding: 4px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    body.dark .theme-toggle-btn {
+      background: #111827;
+      border-color: #1f2937;
+      color: #e5e7eb;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 14px 16px;
+      overflow-y: auto;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    body.dark .chat-messages {
+      background: #020617;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 9px 11px;
+      border-radius: 12px;
+      line-height: 1.4;
+      display: inline-block;
+      word-wrap: break-word;
+      position: relative;
+      animation: fadeInUp 0.18s ease-out;
+      font-size: 13px;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: #dbeafe;
+      border-bottom-right-radius: 3px;
+    }
+
+    body.dark .message.user {
+      background: #1d4ed8;
+      color: #e5e7eb;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: #ede9fe;
+      border-bottom-left-radius: 3px;
+    }
+
+    body.dark .message.bot {
+      background: #111827;
+      color: #e5e7eb;
+    }
+
+    .message small {
+      display: block;
+      font-size: 10px;
+      opacity: 0.6;
+      margin-top: 3px;
+    }
+
+    /* Make links inside bot messages look like pills */
+    /* Make links inside bot messages look like pills and wrap long URLs */
+    .message.bot a {
+      display: inline-block;
+      max-width: 100%;
+      margin-top: 4px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 11px;
+      text-decoration: none;
+      border: 1px solid #e0e7ff;
+      overflow-wrap: anywhere;  /* allow breaks inside long URLs */
+      word-break: break-word;   /* fallback */
+      white-space: normal;      /* don't keep it on one line */
+    }
+
+
+    body.dark .message.bot a {
+      background: #111827;
+      color: #a5b4fc;
+      border-color: #1f2937;
+    }
+
+    .message.bot a:hover {
+      background: #e0e7ff;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .typing-indicator {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #6b21a8;
+      margin: 4px 0 8px;
+    }
+
+    body.dark .typing-indicator {
+      color: #c4b5fd;
+    }
+
+    .typing-bubble {
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #ede9fe, #e0f2fe, #ede9fe);
+      background-size: 200% 100%;
+      animation: shimmer 1s linear infinite;
+    }
+
+    body.dark .typing-bubble {
+      background: linear-gradient(90deg, #111827, #1f2937, #111827);
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .typing-dot-wrapper {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #a855f7;
+      animation: bounce 1s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0.7);
+        opacity: 0.4;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #e0d4ff;
+      background: #f5f3ff;
+      padding: 8px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    body.dark .chat-input {
+      background: #020617;
+      border-top-color: #1f2937;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 9px 11px;
+      border-radius: 999px;
+      border: 1px solid #ddd6fe;
+      outline: none;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    body.dark .chat-input input {
+      background: #020617;
+      border-color: #1f2937;
+      color: #e5e7eb;
+    }
+
+    .chat-input input:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.35);
+    }
+
+    body.dark .chat-input input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.45);
+    }
+
+    .chat-input button.send-btn {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: none;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.1s;
+      box-shadow: 0 6px 15px rgba(124, 58, 237, 0.35);
+      white-space: nowrap;
+    }
+
+    .chat-input button.send-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 9px 20px rgba(124, 58, 237, 0.45);
+      background: #6d28d9;
+    }
+
+    .chat-input button.send-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .send-icon {
+      font-size: 14px;
+    }
+
+    .mic-btn {
+      border-radius: 999px;
+      border: 1px solid #ddd6fe;
+      background: #f9fafb;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.1s, transform 0.07s, box-shadow 0.07s;
+    }
+
+    .mic-btn.listening {
+      background: #fecaca;
+      border-color: #f97373;
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.35);
+      transform: translateY(-1px);
+    }
+
+    body.dark .mic-btn {
+      background: #020617;
+      border-color: #1f2937;
+      color: #e5e7eb;
+    }
+
+    /* Scroll-to-bottom button */
+    .scroll-bottom-btn {
+      position: absolute;
+      right: 18px;
+      bottom: 90px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 11px;
+      border: none;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 6px 15px rgba(124, 58, 237, 0.35);
+      z-index: 5;
+    }
+
+    .scroll-bottom-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    body.dark .scroll-bottom-btn {
+      background: #4f46e5;
+    }
+
+    /* Modal (welcome popup) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: #ffffff;
+      padding: 20px 22px;
+      border-radius: 16px;
+      max-width: 360px;
+      width: 90%;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .modal h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .modal p {
+      margin: 4px 0 10px;
+      font-size: 13px;
+      color: #4b5563;
+    }
+
+    .modal-buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: none;
+      background: #7c3aed;
+      color: #fff;
+      padding: 7px 14px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) {
+      .app-wrapper {
+        flex-direction: column;
+        height: 100vh;
+      }
+      .info-panel {
+        width: 100%;
+        height: 42%;
+      }
+      .chat-panel {
+        width: 100%;
+        height: 58%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .info-panel {
+        display: none;
+      }
+      .app-wrapper {
+        max-width: 100%;
+      }
+      .chat-panel {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Welcome Modal -->
+  <div class="modal-overlay" id="welcomeModal" style="display: none;">
+    <div class="modal">
+      <h2>Welcome 👋</h2>
+      <p>
+        This is the Anna Adarsh College chatbot. It can answer questions about admissions, fees,
+        hostel facilities, infrastructure and courses.
+      </p>
+      <p style="font-size: 12px; color: #6b7280;">
+        This is a project demo. For official and latest details, always refer to the college website.
+      </p>
+      <div class="modal-buttons">
+        <button class="btn-secondary" id="skipIntroBtn">Skip</button>
+        <button class="btn-primary" id="startChatBtn">Start chatting</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-wrapper">
+    <!-- LEFT INFO PANEL -->
+    <div class="info-panel">
+      <div class="info-panel-inner">
+        <div class="info-header">
+          <div class="logo-circle">
+            <img
+              src="/static/images/logo.png"
+              alt="College Logo"
+              style="width: 120px; height: 120px; border-radius: 50%; object-fit: contain;"
+              onerror="this.style.display='none'; this.parentElement.textContent='AA';"
+            />
+          </div>
+          <div class="info-header-text">
+            <h1>Anna Adarsh</h1>
+            <p>College Virtual Assistant</p>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <p>
+            Ask me about admissions, fee structure, hostel, infrastructure, courses and general
+            information about Anna Adarsh College for Women.
+          </p>
+
+          <h2>Quick topics</h2>
+          <div>
+            <span class="pill quick-question" data-question="How can I apply for admission?">
+              Admissions
+            </span>
+            <span class="pill quick-question" data-question="What is the fee structure for undergraduate programmes?">
+              Fees
+            </span>
+            <span class="pill quick-question" data-question="Does the college provide hostel facilities?">
+              Hostel
+            </span>
+            <span class="pill quick-question" data-question="What undergraduate courses are offered by the college?">
+              Courses
+            </span>
+            <span class="pill quick-question" data-question="What facilities are available in the college?">
+              Infrastructure
+            </span>
+            <span class="pill quick-question" data-question="Who should I contact for admission related queries?">
+              Contact
+            </span>
+          </div>
+
+          <h2>Try asking</h2>
+          <ul style="padding-left: 18px; margin: 4px 0 0; font-size: 12px;">
+            <li>“What undergraduate courses are offered?”</li>
+            <li>“Does the college provide hostel facilities?”</li>
+            <li>“How can I apply for admission?”</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-footer">
+        <span><strong>Note:</strong> This chatbot is for informational and project/demo use.</span>
+        <span>For official updates, always refer to the college website and office.</span>
+      </div>
+    </div>
+
+    <!-- RIGHT CHAT PANEL -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <div class="status-dot"></div>
+          <div>
+            <div class="chat-header-title">AACW Chatbot</div>
+            <div class="chat-header-subtitle">Online • Answering college queries</div>
+          </div>
+        </div>
+        <div class="chat-header-right">
+          <div class="chat-header-badge">
+            <img
+              src="/static/images/logo.png"
+              alt="Logo"
+              style="width: 18px; height: 18px; border-radius: 50%; vertical-align: middle; object-fit: contain;"
+              onerror="this.style.display='none';"
+            />
+            <span>AI • FAQ Assistant</span>
+          </div>
+          <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle light/dark mode">
+            <span id="themeIcon">🌙</span>
+            <span style="font-size: 11px;">Mode</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot">
+          Hello! I’m the Anna Adarsh College chatbot. Ask me anything about the college –
+          admissions, fees, hostel, infrastructure or courses.
+          <small>Bot • Just now</small>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+          <div class="typing-bubble">
+            <div>Bot is typing…</div>
+            <div class="typing-dot-wrapper">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- scroll-to-bottom button -->
+      <button class="scroll-bottom-btn" id="scrollBottomBtn">▼ New</button>
+
+      <div class="chat-input">
+        <button class="mic-btn" id="micBtn" title="Speak your question">
+          🎤
+        </button>
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Type your question here..."
+          onkeydown="if(event.key === 'Enter') sendMessage()"
+        />
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <span>Send</span>
+          <span class="send-icon">➤</span>
+        </button>
+      </div>
+
+      <!-- QUICK SUGGESTION CHIPS UNDER INPUT -->
+      <div style="padding: 6px 12px 10px; font-size: 11px; color:#6b7280;">
+        <span style="margin-right:6px;">Try:</span>
+        <button
+          class="pill"
+          style="background:#e0f2fe; border:none; font-size:11px;"
+          onclick="sendMessage('What is the fee structure for undergraduate courses?')"
+        >
+          UG fee details
+        </button>
+        <button
+          class="pill"
+          style="background:#fee2e2; border:none; font-size:11px;"
+          onclick="sendMessage('Does the college provide hostel facilities?')"
+        >
+          Hostel facilities
+        </button>
+        <button
+          class="pill"
+          style="background:#fef3c7; border:none; font-size:11px;"
+          onclick="sendMessage('What is the college address?')"
+        >
+          College address
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatTime() {
+      const d = new Date();
+      const h = d.getHours().toString().padStart(2, "0");
+      const m = d.getMinutes().toString().padStart(2, "0");
+      return `${h}:${m}`;
+    }
+
+    async function sendMessage(textFromQuick = null) {
+      const input = document.getElementById("userInput");
+      const sendBtn = document.getElementById("sendBtn");
+      const chatMessages = document.getElementById("chatMessages");
+      const typingIndicator = document.getElementById("typingIndicator");
+
+      const text = (textFromQuick !== null ? textFromQuick : input.value).trim();
+      if (!text) return;
+
+      // User message bubble
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user";
+      userMsg.innerHTML = `${text}<small>You • ${formatTime()}</small>`;
+      chatMessages.appendChild(userMsg);
+
+      // Clear input if typed
+      if (textFromQuick === null) {
+        input.value = "";
+      }
+      input.focus();
+
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Show typing indicator
+      typingIndicator.style.display = "flex";
+
+      // Disable send button
+      sendBtn.disabled = true;
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text }),
+        });
+
+        const data = await res.json();
+
+        // Hide typing
+        typingIndicator.style.display = "none";
+
+        // Bot message bubble
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot";
+        botMsg.innerHTML = `${data.reply || "Sorry, something went wrong."}
+          <small>Bot • ${formatTime()}</small>`;
+        chatMessages.appendChild(botMsg);
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      } catch (err) {
+        typingIndicator.style.display = "none";
+
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot";
+        botMsg.innerHTML = `Error connecting to server.<small>Bot • ${formatTime()}</small>`;
+        chatMessages.appendChild(botMsg);
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+
+    // Quick topic pills (left side)
+    document.addEventListener("DOMContentLoaded", () => {
+      const quickQuestions = document.querySelectorAll(".quick-question");
+      quickQuestions.forEach((pill) => {
+        pill.addEventListener("click", () => {
+          const q = pill.getAttribute("data-question");
+          sendMessage(q);
+        });
+      });
+    });
+
+    // Scroll-to-bottom button logic
+    (function setupScrollButton() {
+      const chatMessages = document.getElementById("chatMessages");
+      const scrollBtn = document.getElementById("scrollBottomBtn");
+
+      function isAtBottom() {
+        return chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 10;
+      }
+
+      function updateBtn() {
+        if (isAtBottom()) {
+          scrollBtn.style.display = "none";
+        } else {
+          scrollBtn.style.display = "block";
+        }
+      }
+
+      chatMessages.addEventListener("scroll", updateBtn);
+
+      scrollBtn.addEventListener("click", () => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        scrollBtn.style.display = "none";
+      });
+    })();
+
+    // Theme toggle
+    (function setupTheme() {
+      const body = document.body;
+      const toggleBtn = document.getElementById("themeToggleBtn");
+      const themeIcon = document.getElementById("themeIcon");
+
+      const savedTheme = localStorage.getItem("aacw_theme");
+      if (savedTheme === "dark") {
+        body.classList.add("dark");
+        themeIcon.textContent = "☀️";
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        const isDark = body.classList.toggle("dark");
+        themeIcon.textContent = isDark ? "☀️" : "🌙";
+        localStorage.setItem("aacw_theme", isDark ? "dark" : "light");
+      });
+    })();
+
+    // Welcome modal
+    (function setupModal() {
+      const modal = document.getElementById("welcomeModal");
+      const startBtn = document.getElementById("startChatBtn");
+      const skipBtn = document.getElementById("skipIntroBtn");
+
+      const seen = localStorage.getItem("aacw_intro_shown");
+      if (!seen) {
+        modal.style.display = "flex";
+      }
+
+      function closeModal() {
+        modal.style.display = "none";
+        localStorage.setItem("aacw_intro_shown", "yes");
+      }
+
+      startBtn.addEventListener("click", () => {
+        closeModal();
+      });
+
+      skipBtn.addEventListener("click", () => {
+        closeModal();
+      });
+    })();
+
+    // Voice input
+    (function setupVoice() {
+      const micBtn = document.getElementById("micBtn");
+      const input = document.getElementById("userInput");
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        micBtn.style.display = "none";
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-IN";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      let listening = false;
+
+      micBtn.addEventListener("click", () => {
+        if (!listening) {
+          recognition.start();
+        } else {
+          recognition.stop();
+        }
+      });
+
+      recognition.addEventListener("start", () => {
+        listening = true;
+        micBtn.classList.add("listening");
+      });
+
+      recognition.addEventListener("end", () => {
+        listening = false;
+        micBtn.classList.remove("listening");
+      });
+
+      recognition.addEventListener("result", (event) => {
+        const transcript = event.results[0][0].transcript;
+        input.value = transcript;
+        sendMessage();
+      });
+
+      recognition.addEventListener("error", () => {
+        listening = false;
+        micBtn.classList.remove("listening");
+      });
+    })();
+  </script>
+</body>
+</html>
