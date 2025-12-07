@@ -21,7 +21,9 @@ app = Flask(__name__)
 app.secret_key = "change-this-secret-key"  # 👉 change this for safety
 
 # ---------- Gemini config ----------
+# Make sure GEMINI_API_KEY is set in Cloud Run env vars
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+print("Gemini configured. Key present:", bool(os.getenv("GEMINI_API_KEY")))
 
 # ---------- 0. Paths ----------
 FAQ_PATH = os.path.join("data", "faq.json")
@@ -256,8 +258,9 @@ def answer_with_gemini(query):
             "but keep the same AACW Chatbot identity."
         )
 
+        # 👉 FIXED: use the correct Flash model
         model = genai.GenerativeModel(
-            "gemini-flash-latest",
+            "gemini-1.5-flash",
             system_instruction=system_prompt,
         )
 
@@ -274,7 +277,8 @@ def answer_with_gemini(query):
 
         return text.strip() if text else "I'm not sure how to answer that."
     except Exception as e:
-        print("Gemini error:", e)
+        # This prints the REAL reason if something fails (check Cloud Run logs)
+        print("Gemini error:", repr(e))
         return "Gemini is currently unavailable."
 
 
@@ -335,8 +339,15 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
         return "Hello! How can I help you today?"
     if q in ["good morning", "good afternoon", "good evening"]:
         return "Hi there! What can I do for you?"
+    
+    # --- 2. Appreciation / Thanks ---
+    if q in ["thank you", "thanks", "thankyou", "thank u", "tnx"]:
+        return "You're welcome! I'm happy to help 😊"
 
-    # --- 2. Bot identity: who / what are you / name / are you AI? ---
+    if q in ["good", "great", "nice", "awesome"]:
+        return "I'm glad to hear that! Let me know if you need anything else 😊"
+
+    # --- 3. Bot identity: who / what are you / name / are you AI? ---
     if any(
         phrase in q
         for phrase in [
@@ -373,7 +384,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
             "answer general questions using Google’s <strong>Gemini</strong> model."
         )
 
-    # --- 3. "Who made you?" / "Who created you?" (detailed project credit) ---
+    # --- 4. "Who made you?" / "Who created you?" (detailed project credit) ---
     if any(
         phrase in q
         for phrase in [
@@ -396,7 +407,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
             "to answer college-related and general queries."
         )
 
-    # --- 4. "What can you do?" / capabilities ---
+    # --- 5. "What can you do?" / capabilities ---
     if (
         re.search(r"what\s+can\s+(you|u)\s+do", q)
         or q in [
@@ -423,11 +434,8 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
             "model when you ask."
         )
 
-    # (Note: there was a second 'who made you' block here in your old code;
-    # it's now merged into the earlier one.)
-
-    # --- 5. “Tell me more” / “What else” logic ---
-    # 5a. Explicitly about the college → curated summary
+    # --- 6. “Tell me more” / “What else” logic ---
+    # 6a. Explicitly about the college → curated summary
     if any(
         phrase in q
         for phrase in [
@@ -444,7 +452,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
         analytics["college_questions"] += 1
         return default_college_summary()
 
-    # 5b. Generic “tell me more / what else” → Gemini
+    # 6b. Generic “tell me more / what else” → Gemini
     if q in [
         "tell me more",
         "anything else",
@@ -457,7 +465,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
         analytics["gemini_calls"] += 1
         return answer_with_gemini(user_query)
 
-    # --- 6. High-level "about this college" queries ---
+    # --- 7. High-level "about this college" queries ---
     if any(
         phrase in q
         for phrase in [
@@ -475,7 +483,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
         analytics["college_questions"] += 1
         return default_college_summary()
 
-    # --- 7. Direct link shortcuts ---
+    # --- 8. Direct link shortcuts ---
     if "direct link" in q or "direct lin" in q:
         return (
             "Here are some useful direct links for Anna Adarsh College:\n\n"
@@ -487,7 +495,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
             "\"B.Sc Computer Science fees\" for more specific details."
         )
 
-    # --- 8. Contact details ---
+    # --- 9. Contact details ---
     if any(
         word in q
         for word in [
@@ -514,7 +522,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
             "🌐 <strong>Contact Page:</strong> https://annaadarsh.edu.in/contacts/"
         )
 
-    # --- 9. Fee logic ---
+    # --- 10. Fee logic ---
     if "fee" in q or "fees" in q or "tuition" in q:
         analytics["fee_queries"] += 1
         analytics["college_questions"] += 1
@@ -545,7 +553,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
             "You can also type things like \"B.Sc Computer Science fees\"."
         )
 
-    # --- 10. Decide if college-related ---
+    # --- 11. Decide if college-related ---
     tokens = re.findall(r"\w+", q)
     is_college_question = any(tok in COLLEGE_KEYWORDS for tok in tokens)
     if is_college_question:
@@ -556,7 +564,7 @@ def get_best_answer(user_query, top_k=3, threshold=0.2):
         analytics["gemini_calls"] += 1
         return answer_with_gemini(user_query)
 
-    # --- 11. Vector-store FAQ (LangChain) + default fallback ---
+    # --- 12. Vector-store FAQ (LangChain) + default fallback ---
     if vectordb:
         docs_scores = vectordb.similarity_search_with_score(q, k=top_k)
         if docs_scores:
@@ -744,4 +752,3 @@ def admin_upload_pdf():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port)
-
