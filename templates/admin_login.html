@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AACW Chatbot – Admin Login</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617, #020617 40%, #111827);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e5e7eb;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 18px;
+      padding: 26px 24px 22px;
+      width: 320px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.8);
+      border: 1px solid #1f2937;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    p.subtitle {
+      margin: 0 0 16px;
+      font-size: 12px;
+      text-align: center;
+      color: #9ca3af;
+    }
+
+    label {
+      font-size: 12px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      outline: none;
+      font-size: 13px;
+    }
+
+    input[type="password"]:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.4);
+    }
+
+    button {
+      margin-top: 14px;
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: none;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.45);
+    }
+
+    button:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+    }
+
+    .error {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #fca5a5;
+      text-align: center;
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 11px;
+      text-align: center;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>AACW Admin</h1>
+    <p class="subtitle">Enter the PIN to manage chatbot FAQs.</p>
+
+    <form method="POST" action="/admin/login">
+      <label for="pin">Admin PIN</label>
+      <input type="password" id="pin" name="pin" required />
+
+      <button type="submit">Login</button>
+
+      {% if error %}
+      <div class="error">{{ error }}</div>
+      {% endif %}
+    </form>
+
+    <div class="hint">
+      This panel is for project/demo use only.
+    </div>
+  </div>
+</body>
+</html>

@@ -312,7 +312,6 @@
       margin-top: 3px;
     }
 
-    /* Make links inside bot messages look like pills */
     /* Make links inside bot messages look like pills and wrap long URLs */
     .message.bot a {
       display: inline-block;
@@ -329,7 +328,6 @@
       word-break: break-word;   /* fallback */
       white-space: normal;      /* don't keep it on one line */
     }
-
 
     body.dark .message.bot a {
       background: #111827;
@@ -604,6 +602,53 @@
       font-weight: 500;
     }
 
+    /* Dynamic suggestion chips */
+    .suggestion-row {
+      padding: 4px 12px 10px;
+      font-size: 11px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    body.dark .suggestion-row {
+      color: #9ca3af;
+    }
+
+    .suggestion-label {
+      white-space: nowrap;
+    }
+
+    .suggestion-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.9);
+      color: #111827;
+      transition: transform 0.07s ease-out, box-shadow 0.07s ease-out, opacity 0.07s;
+    }
+
+    .chip:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    body.dark .chip {
+      background: #111827;
+      color: #e5e7eb;
+      border: 1px solid #1f2937;
+    }
+
     @media (max-width: 900px) {
       .app-wrapper {
         flex-direction: column;
@@ -777,35 +822,78 @@
         </button>
       </div>
 
-      <!-- QUICK SUGGESTION CHIPS UNDER INPUT -->
-      <div style="padding: 6px 12px 10px; font-size: 11px; color:#6b7280;">
-        <span style="margin-right:6px;">Try:</span>
-        <button
-          class="pill"
-          style="background:#e0f2fe; border:none; font-size:11px;"
-          onclick="sendMessage('What is the fee structure for undergraduate courses?')"
-        >
-          UG fee details
-        </button>
-        <button
-          class="pill"
-          style="background:#fee2e2; border:none; font-size:11px;"
-          onclick="sendMessage('Does the college provide hostel facilities?')"
-        >
-          Hostel facilities
-        </button>
-        <button
-          class="pill"
-          style="background:#fef3c7; border:none; font-size:11px;"
-          onclick="sendMessage('What is the college address?')"
-        >
-          College address
-        </button>
+      <!-- DYNAMIC SUGGESTION CHIPS UNDER INPUT -->
+      <div class="suggestion-row">
+        <span class="suggestion-label">Try:</span>
+        <div id="suggestionChips" class="suggestion-chips"></div>
       </div>
     </div>
   </div>
 
   <script>
+    // ---------- Dynamic suggestion logic ----------
+    const BASE_SUGGESTIONS = [
+      { label: "UG fee details", text: "UG fees" },
+      { label: "Hostel facilities", text: "Hostel facilities" },
+      { label: "College address", text: "college address" },
+    ];
+
+    function renderSuggestions(list) {
+      const container = document.getElementById("suggestionChips");
+      if (!container) return;
+      container.innerHTML = "";
+      list.forEach((item) => {
+        const btn = document.createElement("button");
+        btn.className = "chip";
+        btn.textContent = item.label;
+        btn.addEventListener("click", () => {
+          const input = document.getElementById("userInput");
+          input.value = item.text;
+          sendMessage();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function updateSuggestions(lastUserMessage) {
+      const msg = (lastUserMessage || "").toLowerCase();
+      let suggestions = BASE_SUGGESTIONS;
+
+      if (msg.includes("fee") || msg.includes("fees") || msg.includes("tuition")) {
+        suggestions = [
+          { label: "UG fee details", text: "UG fees" },
+          { label: "PG fee details", text: "PG fees" },
+          { label: "All courses fee structure", text: "all fees" },
+        ];
+      } else if (msg.includes("hostel")) {
+        suggestions = [
+          { label: "Hostel facilities", text: "Hostel facilities" },
+          { label: "Hostel rules", text: "Hostel rules" },
+          { label: "Hostel fees", text: "hostel fees" },
+        ];
+      } else if (msg.includes("course") || msg.includes("courses")) {
+        suggestions = [
+          { label: "UG courses list", text: "What undergraduate courses are offered?" },
+          { label: "PG courses list", text: "What postgraduate courses are offered?" },
+          { label: "Computer Science course", text: "B.Sc Computer Science course details" },
+        ];
+      } else if (
+        msg.includes("contact") ||
+        msg.includes("address") ||
+        msg.includes("phone") ||
+        msg.includes("email")
+      ) {
+        suggestions = [
+          { label: "College address", text: "college address" },
+          { label: "Contact numbers", text: "contact number" },
+          { label: "Email IDs", text: "college email id" },
+        ];
+      }
+
+      renderSuggestions(suggestions);
+    }
+
+    // ---------- Existing chat logic ----------
     function formatTime() {
       const d = new Date();
       const h = d.getHours().toString().padStart(2, "0");
@@ -821,6 +909,9 @@
 
       const text = (textFromQuick !== null ? textFromQuick : input.value).trim();
       if (!text) return;
+
+      // update suggestion chips based on what user just asked
+      updateSuggestions(text);
 
       // User message bubble
       const userMsg = document.createElement("div");
@@ -884,6 +975,9 @@
           sendMessage(q);
         });
       });
+
+      // initial default suggestions
+      renderSuggestions(BASE_SUGGESTIONS);
     });
 
     // Scroll-to-bottom button logic

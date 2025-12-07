@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AACW Chatbot – Admin Panel</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #020617, #020617 40%, #111827);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #e5e7eb;
+      padding: 18px 18px 30px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .top-bar h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .top-bar span {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .logout-btn {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: #111827;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.1fr);
+      gap: 16px;
+    }
+
+    .panel {
+      background: #020617;
+      border-radius: 16px;
+      padding: 14px 14px 16px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.85);
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .panel small {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      margin-top: 8px;
+      margin-bottom: 3px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      font-size: 12px;
+      margin-top: 6px;
+      color: #e5e7eb;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.35);
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-primary {
+      margin-top: 10px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: #7c3aed;
+      color: #fff;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.5);
+    }
+
+    .btn-primary:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #b91c1c;
+      color: #fee2e2;
+      margin-left: 8px;
+    }
+
+    .btn-danger:hover {
+      background: #991b1b;
+    }
+
+    .btn-mini {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #111827;
+      color: #e5e7eb;
+      margin-top: 6px;
+      margin-right: 6px;
+      border: 1px solid #374151;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .stat-card {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      padding: 8px 9px;
+      font-size: 11px;
+    }
+
+    .stat-label {
+      color: #9ca3af;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .faq-list {
+      margin-top: 8px;
+      max-height: 460px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid #111827;
+      padding: 8px 2px 10px;
+    }
+
+    .faq-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+
+    .faq-q-label {
+      font-weight: 600;
+      color: #fde68a;
+    }
+
+    .faq-index {
+      opacity: 0.7;
+      font-size: 11px;
+    }
+
+    .faq-form-row {
+      margin-top: 4px;
+    }
+
+    .inline-actions {
+      margin-top: 4px;
+    }
+
+    .upload-hint {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div>
+      <h1>AACW Chatbot – Admin</h1>
+      <span>Manage FAQs, upload PDFs and view usage stats.</span>
+    </div>
+    <form method="GET" action="/admin/logout">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: FAQ management -->
+    <div class="panel">
+      <h2>FAQs ({{ faqs|length }})</h2>
+      <small>Edit existing entries or delete them. Changes are saved to <code>faq.json</code> and the index is rebuilt.</small>
+
+      <div class="faq-list">
+        {% for item in faqs %}
+        <div class="faq-item">
+          <div class="faq-header">
+            <span class="faq-q-label">Q{{ loop.index }}.</span>
+            <span class="faq-index">Index: {{ loop.index0 }}</span>
+          </div>
+
+          <form method="POST" action="/admin/edit/{{ loop.index0 }}">
+            <div class="faq-form-row">
+              <label>Question</label>
+              <input type="text" name="question" value="{{ item.question }}" required />
+            </div>
+            <div class="faq-form-row">
+              <label>Answer</label>
+              <textarea name="answer" rows="2" required>{{ item.answer }}</textarea>
+            </div>
+            <div class="inline-actions">
+              <button type="submit" class="btn-mini">Save changes</button>
+          </form>
+              <form method="POST" action="/admin/delete/{{ loop.index0 }}" style="display:inline;">
+                <button type="submit" class="btn-danger">Delete</button>
+              </form>
+            </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- RIGHT: Add + upload + stats -->
+    <div class="panel">
+      <h2>Add FAQ</h2>
+      <small>Quickly add a new question and answer pair.</small>
+
+      <form method="POST" action="/admin/add">
+        <label>Question</label>
+        <input type="text" name="question" placeholder="Type the user question..." required />
+
+        <label>Answer</label>
+        <textarea name="answer" rows="3" placeholder="Type the chatbot's answer..." required></textarea>
+
+        <button type="submit" class="btn-primary">Add FAQ</button>
+      </form>
+
+      <hr style="border:none; border-top:1px solid #111827; margin:14px 0;" />
+
+      <h2>Upload PDF → Auto FAQ</h2>
+      <small>Upload a PDF that contains Q & A in the format <code>Q: ...?  A: ...</code>. The system will try to auto-extract them into FAQs.</small>
+
+      <form method="POST" action="/admin/upload_pdf" enctype="multipart/form-data">
+        <label for="pdf_file">Select PDF file</label>
+        <input type="file" id="pdf_file" name="pdf_file" accept="application/pdf" required />
+        <button type="submit" class="btn-primary">Upload & Extract</button>
+      </form>
+      <div class="upload-hint">
+        Tip: Works best if each QA is clearly written like:<br>
+        <code>Q: What is ... ? A: The answer is ...</code>
+      </div>
+
+      <hr style="border:none; border-top:1px solid #111827; margin:14px 0;" />
+
+      <h2>Usage stats</h2>
+      <small>High-level numbers collected since the app started.</small>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total messages</div>
+          <div class="stat-value">{{ stats.total_messages }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">College questions</div>
+          <div class="stat-value">{{ stats.college_questions }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fee queries</div>
+          <div class="stat-value">{{ stats.fee_queries }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">FAQ hits</div>
+          <div class="stat-value">{{ stats.faq_hits }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gemini calls</div>
+          <div class="stat-value">{{ stats.gemini_calls }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
